@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from datastructures import FamilyStructure
+
 # from models import Person
 
 app = Flask(__name__)
@@ -49,6 +50,28 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+@app.route('/members/<int:id>', methods=['GET'])
+def get_one_member(id):
+
+
+    member = jackson_family.get_member(id)
+
+    if member is None:
+        return "Member not found", 404
+    
+    response_body = {
+    "id": member['id'],
+    "first_name": member['first_name'],
+    "last_name": jackson_family.last_name,
+    "age": member['age'],
+    "lucky_numbers": member['lucky_numbers']
+
+}
+
+    if member:
+        return jsonify(response_body), 200
 
 
 # this only runs if `$ python src/app.py` is executed

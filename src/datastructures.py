@@ -40,9 +40,11 @@ class FamilyStructure:
         pass
 
     def get_member(self, id):
-        # fill this method and update the return
-        pass
+        for m in self._members:
+            if m['id'] == id:
+                return m
 
     # this method is done, it returns a list with all the family members
+
     def get_all_members(self):
         return self._members
