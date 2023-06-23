@@ -73,6 +73,34 @@ def get_one_member(id):
     if member:
         return jsonify(response_body), 200
 
+@app.route('/members', methods=['POST'])
+def add_member():
+
+    body = request.get_json()
+
+    first_name = body['first_name']
+    last_name = body['last_name']
+    age = body['age']
+    lucky_numbers = body['lucky_numbers']
+
+    new_member = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "age": age,
+        "lucky_numbers": lucky_numbers
+    }
+
+    jackson_family.add_member(new_member)
+
+
+    response_body = {'Message':'Member added successfully'}
+
+    return jsonify(response_body), 200
+
+
+
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
