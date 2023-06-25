@@ -36,8 +36,9 @@ class FamilyStructure:
         self._members.append(new_member)
 
     def delete_member(self, id):
-        # fill this method and update the return
-        pass
+       for m in self._members:
+           if m['id'] == id:
+               return self._members.remove(m)
 
     def get_member(self, id):
         for m in self._members:

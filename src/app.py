@@ -42,39 +42,55 @@ def sitemap():
 @app.route('/members', methods=['GET'])
 def handle_hello():
 
-    # this is how you can use the Family datastructure by calling its methods
-    members = jackson_family.get_all_members()
-    response_body = {
-        "hello": "world",
-        "family": members
-    }
 
-    return jsonify(response_body), 200
+    if request.method != 'GET':
+        return jsonify({"error": "Bad request"}), 400
+
+
+    members = jackson_family.get_all_members()
+
+    if members is None:
+        return jsonify({"error": "Members not found"}), 404
+    else:
+        response_body = {
+            "hello": "world",
+            "family": members
+        }
+        return jsonify(response_body), 200
+
+    
+    
 
 
 @app.route('/members/<int:id>', methods=['GET'])
 def get_one_member(id):
 
+    if request.method != 'GET':
+        return jsonify({"error": "Bad request"}), 400
 
     member = jackson_family.get_member(id)
 
     if member is None:
         return "Member not found", 404
-    
-    response_body = {
-    "id": member['id'],
-    "first_name": member['first_name'],
-    "last_name": jackson_family.last_name,
-    "age": member['age'],
-    "lucky_numbers": member['lucky_numbers']
 
-}
+    response_body = {
+        "id": member['id'],
+        "first_name": member['first_name'],
+        "last_name": jackson_family.last_name,
+        "age": member['age'],
+        "lucky_numbers": member['lucky_numbers']
+
+        }
 
     if member:
         return jsonify(response_body), 200
 
+
 @app.route('/members', methods=['POST'])
 def add_member():
+
+    if request.method != 'POST':
+        return jsonify({"error": "Bad request"}), 400
 
     body = request.get_json()
 
@@ -93,13 +109,27 @@ def add_member():
     jackson_family.add_member(new_member)
 
 
-    response_body = {'Message':'Member added successfully'}
+    response_body = {'Message': 'Member added successfully'}
 
     return jsonify(response_body), 200
 
 
+@app.route('/members/<int:id>', methods=['DELETE'])
+def remove_member(id):
 
+    if request.method != 'DELETE':
+        return jsonify({"error": "Bad request"}), 400
 
+    member = jackson_family.get_member(id)
+
+    if member == None:
+        return "Member not found", 404
+
+    jackson_family.delete_member(member)
+
+    response_body = {'Message': 'Member removed successfully'}
+
+    return jsonify(response_body), 200
 
 
 # this only runs if `$ python src/app.py` is executed
